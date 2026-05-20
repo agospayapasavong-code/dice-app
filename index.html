@@ -142,7 +142,16 @@
     <footer>© 2026 AGOS PAYAPA. ALL RIGHTS RESERVED.</footer>
 
     <script>
-        // Updated mapping based on images: "image_5d9bfe.png" and the new snippet
+        // Service Worker registration for absolute offline access via GitHub Pages
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/dice-app/sw.js', { scope: '/dice-app/' })
+                    .then(reg => console.log('Offline mode active!'))
+                    .catch(err => console.log('Worker failed', err));
+            });
+        }
+
+        // Updated mapping based on images
         const dicePools = [
             [
                 { name: "Anitu", url: "00_anitu.png" },
