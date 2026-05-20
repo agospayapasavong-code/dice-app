@@ -1,40 +1,44 @@
-const CACHE_NAME = 'savong-store-v1';
+const CACHE_NAME = 'savong-store-v2';
+const APP_PREFIX = '/dice-app'; // Your GitHub subfolder
+
 const ASSETS = [
-  './',
-  './index.html',
-  './manifest.json',
-  './icon-192.png',
-  './icon-512.png',
-  './00_anitu.png',
-  './00_bagani.png',
-  './00_halimao.png',
-  './01_luzon.png',
-  './01_visayas.png',
-  './01_mindanao.png',
-  './02_hiwaga.png',
-  './02_kisig.png',
-  './02_sindak.png',
-  './02_tabak_choice.png',
-  './02_tabang.png',
-  './02_taglay.png',
-  './03_high.png',
-  './03_low.png',
-  './03_high_kalasag.png',
-  './03_high_tabak.png',
-  './03_low_kalasag.png',
-  './03_low_tabak.png'
+  `${APP_PREFIX}/`,
+  `${APP_PREFIX}/index.html`,
+  `${APP_PREFIX}/manifest.json`,
+  `${APP_PREFIX}/icon-192.png`,
+  `${APP_PREFIX}/icon-512.png`,
+  `${APP_PREFIX}/00_anitu.png`,
+  `${APP_PREFIX}/00_bagani.png`,
+  `${APP_PREFIX}/00_halimao.png`,
+  `${APP_PREFIX}/01_luzon.png`,
+  `${APP_PREFIX}/01_visayas.png`,
+  `${APP_PREFIX}/01_mindanao.png`,
+  `${APP_PREFIX}/02_hiwaga.png`,
+  `${APP_PREFIX}/02_kisig.png`,
+  `${APP_PREFIX}/02_sindak.png`,
+  `${APP_PREFIX}/02_tabak_choice.png`,
+  `${APP_PREFIX}/02_tabang.png`,
+  `${APP_PREFIX}/02_taglay.png`,
+  `${APP_PREFIX}/03_high.png`,
+  `${APP_PREFIX}/03_low.png`,
+  `${APP_PREFIX}/03_high_kalasag.png`,
+  `${APP_PREFIX}/03_high_tabak.png`,
+  `${APP_PREFIX}/03_low_kalasag.png`,
+  `${APP_PREFIX}/03_low_tabak.png`
 ];
 
-// Install Service Worker and cache everything
 self.addEventListener('install', (e) => {
   e.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
       return cache.addAll(ASSETS);
-    })
+    }).then(() => self.skipWaiting()) // Forces immediate activation
   );
 });
 
-// Intercept network requests and serve from cache if offline
+self.addEventListener('activate', (e) => {
+  e.waitUntil(self.clients.claim()); // Takes control of the page immediately
+});
+
 self.addEventListener('fetch', (e) => {
   e.respondWith(
     caches.match(e.request).then((response) => {
